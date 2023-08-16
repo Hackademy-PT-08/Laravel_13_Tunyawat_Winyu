@@ -1,0 +1,1 @@
+@vite('resource/css/app.css')
