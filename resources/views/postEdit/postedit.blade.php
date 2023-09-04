@@ -41,6 +41,15 @@
                         <label for="price" class="form-label">price</label>
                         <input type="number" class="form-control" name="price" value="{{$painting->price}}" placeholder="Amout of your painting" id="price" min="1" step="any" />
                     </div>
+                    <div class="mb-3">
+                        <label for="categories" class="form-label">Catogory</label>
+                        <select class="form-select" id="categories" name="categories[]" aria-label="Default select example">
+                            <option selected>Open this select menu</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}" {{ ($painting->categories->contains($category->id)) ? 'selected' : '' }}>{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="mb-3 button">
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>

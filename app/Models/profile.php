@@ -10,4 +10,5 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class profile extends Model
 {
     use HasFactory;
+    
 }

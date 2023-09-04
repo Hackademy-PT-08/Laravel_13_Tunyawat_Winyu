@@ -37,7 +37,7 @@ class CustomerController extends Controller
 
         $customer->save();
 
-        return redirect()->route('homepage'); 
+        return $customer->id;
     }
 
     /**

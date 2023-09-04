@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Painting;
+use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\View\ViewName;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerController;
 use Mockery\Generator\StringManipulation\Pass\Pass;
 
@@ -16,10 +19,9 @@ class PaintingController extends Controller
      */
     public function index()
     {
-        $painting = Painting::all();
-
-        return view('users.profile', [
-            'painting' => $painting
+        $paintings = Painting::all();
+        return view('home.homepage', [
+            'paintings' => $paintings
         ]);
     }
 
@@ -28,8 +30,11 @@ class PaintingController extends Controller
      */
     public function create()
     {
+        $categories = Categories::all();
 
-        return view('addpaintings.add');
+        return view('addpaintings.add', [
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -58,6 +63,16 @@ class PaintingController extends Controller
 
         $painting->save();
 
+        $categories = $request->categories;
+
+        $currentPainting = Painting::find($painting->id);
+
+        foreach($categories as $category){
+
+            $currentPainting->categories()->attach($category);
+
+        }
+
         return redirect()->route('homepage'); 
     }
 
@@ -76,10 +91,13 @@ class PaintingController extends Controller
     {
         $painting = Painting::find($id);
 
+        $categories = Categories::all();
+
         if (auth()->user()->id == $painting->user_id){
 
             return view('postEdit.postedit', [
-                'painting' => $painting
+                'painting' => $painting,
+                'categories' => $categories
             ]);
 
         }else{
@@ -111,6 +129,26 @@ class PaintingController extends Controller
             }
 
             $painting->save();
+
+            $currentPainting = Painting::find($painting->id);
+
+            // Vado a eliminare la vecchia categoia scelto in precedente(se esiste)
+            $allCategories = Categories::all();
+
+            foreach($allCategories as $category){
+
+                $currentPainting->categories()->detach($category->id);
+
+            }
+
+            // Vado ad aggiungere la nuova categoria
+            $categories = $request->categories;
+
+            foreach($categories as $category){
+
+                $currentPainting->categories()->attach($category);
+
+            }
 
             return redirect()->route('profile', $id);
 
@@ -146,13 +184,16 @@ class PaintingController extends Controller
         ]);
     }
 
-    // Do Checkout
+    // Do Checkout customers
 
     public function doCheckout(Request $request, $id){
 
         $add_customers = (new CustomerController)->store($request);
+        $add_orders = (new OrderController)->store($request, $add_customers);
         
-        return $add_customers;
+        return $add_orders;
 
     }
+
+    // Do Checkout orders
 }

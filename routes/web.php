@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrederController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\PaintingController;
@@ -40,6 +43,11 @@ Route::get('/paintings/add', [PaintingController::class, 'create'])->name('addPa
 Route::post('/paintings/add', [PaintingController::class, 'store'])->name('addPaintings.store');
 
 // Route Checkout
-
 Route::get('/paintings/checkout/{id}', [PaintingController::class, 'checkout'])->name('painting.checkout');
 Route::post('/paintings/checkout/{id}', [PaintingController::class, 'doCheckout'])->name('painting.do.checkout');
+
+Route::post('/painting/checkout/{id}', [OrderController::class, 'checkoutOrders'])->name('order.checkout');
+
+// Route Categories
+
+Route::get('/post/category/{id}', [CategoryController::class, 'show'])->name('post.category');

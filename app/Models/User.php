@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Models\profile;
+use App\Models\Category;
 use App\Models\Painting;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -45,7 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
-    public function painting (){
+    public function profile (){
 
         return $this->hasMany(Painting::class);
     }
